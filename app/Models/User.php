@@ -42,4 +42,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function microposts()
+    {
+        return $this->hasMany(Micropost::class);
+    }
+
+    public function loadRelationshipCounts()
+    {
+        $this->loadCount('microposts');
+    }
 }
