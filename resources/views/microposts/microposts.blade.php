@@ -30,6 +30,21 @@
                                 </form>
                             @endif
                         </div>
+                        <div class="mt-2 justify-content: flex-start">
+                            {{-- お気に入りボタンのフォーム --}}
+                            <form method="POST" action="{{ route('microposts.favorite', $micropost->id) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-success btn-sm normal-case"
+                                    onclick="return confirm('Favorite id = {{ $micropost->id }} ?')">Favorite</button>
+                            </form>
+                            {{-- アンフェイバリットボタンのフォーム --}}
+                            <form method="POST" action="{{ route('microposts.unfavorite', $micropost->id) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-warning btn-sm normal-case"
+                                    onclick="return confirm('Unfavorite id = {{ $micropost->id }} ?')">Unfavorite</button>
+                            </form>
+                        </div>
                     </div>
                 </li>
             @endforeach

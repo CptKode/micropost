@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Micropost;
 
+use App\Models\User;
+
 class MicropostsController extends Controller
 {
     public function index()
@@ -58,5 +60,38 @@ class MicropostsController extends Controller
         // 前のURLへリダイレクトさせる
         return back()
             ->with('Delete Failed');
+    }
+
+    public function favorite(Micropost $micropost)
+    {
+        $user = \Auth::user();
+
+        if (!$user->favorites()->where('micropost_id', $micropost->id)->exists()) {
+            $user->favorites()->attach($micropost->id);
+            return redirect()->route('users.favorites', ['id' => $user->id])->with('success', 'Micropost favorited successfully.');
+        }
+
+        return redirect()->route('users.favorites', ['id' => $user->id])->with('success', 'Micropost favorited successfully.');
+    }
+
+    public function unfavorite(Micropost $micropost)
+    {
+        $user = \Auth::user();
+        $user->favorites()->detach($micropost->id);
+
+        return redirect()->route('users.favorites', ['id' => $user->id])->with('success', 'Micropost unfavorited successfully.');
+    }
+
+    /**
+     * Display a listing of the user's favorite microposts.
+     */
+    public function favorites(User $user)
+    {
+        $favorites = $user->favorites()->paginate(10);
+
+        return view('microposts.favorites', [
+            'user' => $user,
+            'favorites' => $favorites,
+        ]);
     }
 }

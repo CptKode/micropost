@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -50,7 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function loadRelationshipCounts()
     {
-        $this->loadCount(['microposts', 'followings', 'followers']);
+        $this->loadCount(['microposts', 'followings', 'followers', 'favorites']);
     }
 
     /**
@@ -67,6 +67,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function followers()
     {
         return $this->belongsToMany(User::class, 'user_follow', 'follow_id', 'user_id')->withTimestamps();
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Micropost::class, 'micropost_favorite', 'user_id', 'micropost_id')->withTimestamps();
     }
 
     /**
@@ -116,6 +121,48 @@ class User extends Authenticatable implements MustVerifyEmail
     public function is_following(int $userId)
     {
         return $this->followings()->where('follow_id', $userId)->exists();
+    }
+
+    /**
+     * @param  int  $userId
+     * @return bool
+     */
+    public function favorite(int $userId)
+    {
+        $exist = $this->favorite($userId);
+        $its_me = $this->id == $userId;
+
+        if ($exist || $its_me) {
+            return false;
+        } else {
+            $this->favorites()->attach($userId);
+            return true;
+        }
+    }
+
+    /**
+     * @param  int $usereId
+     * @return bool
+     */
+    public function unfavorite(int $userId)
+    {
+        $exist = $this->favorite($userId);
+        $its_me = $this->id == $userId;
+
+        if ($exist && !$its_me) {
+            $this->favorites()->detach($userId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * @param  int $userId
+     * @return bool
+     */
+    public function is_favorite(int $userId)
+    {
+        return $this->favorites()->where('micropost_id', $userId)->exists();
     }
 
     /**
