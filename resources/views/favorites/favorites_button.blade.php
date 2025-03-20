@@ -1,11 +1,10 @@
-@if (Auth::user()->is_favorite($user->id))
+@if (Auth::user()->is_favorite($micropost->id))
     <div>
         {{-- アンフェイバリットボタンのフォーム --}}
         <form method="POST" action="{{ route('favorites.unfavorite', $micropost->id) }}">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-warning btn-sm normal-case"
-                onclick="return confirm('id = {{ $micropost->id }} を外します。よろしいですか？')">Unfavorite</button>
+            <button type="submit" class="btn btn-warning btn-sm normal-case">Unfavorite</button>
         </form>
     </div>
     @else
