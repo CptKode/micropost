@@ -11,7 +11,7 @@
             @include('users.navtabs')
             <div class="mt-4">
                 {{-- ユーザー一覧 --}}
-                @include('users.users')
+                @include('users.users_favorites')
             </div>
         </div>
     </div>

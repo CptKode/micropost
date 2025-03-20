@@ -4,8 +4,7 @@
         <form method="POST" action="{{ route('user.unfollow', $user->id) }}">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-error btn-block normal-case"
-                onclick="return confirm('id = {{ $user->id }} のフォローを外します。よろしいですか？')">Unfollow</button>
+            <button type="submit" class="btn btn-error btn-block normal-case">Unfollow</button>
         </form>
     @else
         {{-- フォローボタンのフォーム --}}
