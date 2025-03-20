@@ -28,8 +28,8 @@ Route::get('/dashboard', [MicropostsController::class, 'index'])->middleware(['a
 //    return view('dashboard');
 //})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('microposts/{micropost}/favorite', [MicropostsController::class, 'favorite'])->name('microposts.favorite');
-Route::delete('microposts/{micropost}/unfavorite', [MicropostsController::class, 'unfavorite'])->name('microposts.unfavorite');
+// Route::post('microposts/{micropost}/favorite', [MicropostsController::class, 'favorite'])->name('microposts.favorite');
+// Route::delete('microposts/{micropost}/unfavorite', [MicropostsController::class, 'unfavorite'])->name('microposts.unfavorite');
 
 Route::group(['middleware' => ['auth']], function () {
     // 追記ここから
@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::prefix('microposts/{id}')->group(function() {
-        Route::post('favorites', [FavoritesController::class, 'store'])->name('favorites.favorite');
+        Route::post('favorite', [FavoritesController::class, 'store'])->name('favorites.favorite');
         Route::delete('unfavorite', [FavoritesController::class, 'destroy'])->name('favorites.unfavorite');
     });
     // 追記きこまで
@@ -50,10 +50,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('users', UsersController::class, ['only' => ['index', 'show']]);
+    Route::resource('microposts', MicropostsController::class, ['only' => ['store', 'destroy']]);
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('microposts', MicropostsController::class, ['only' => ['store', 'destroy']]);
 });
 
 require __DIR__.'/auth.php';

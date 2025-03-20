@@ -1,17 +1,19 @@
-@if (Auth::id() != $user->id)
-    @if (Auth::user()->is_favorite($user->id))
-        {{-- タンのフォーム --}}
-        <form method="POST" action="{{ route('user.unfavorite', $user->id) }}">
+@if (Auth::user()->is_favorite($user->id))
+    <div>
+        {{-- アンフェイバリットボタンのフォーム --}}
+        <form method="POST" action="{{ route('favorites.unfavorite', $micropost->id) }}">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-error btn-block normal-case"
-                onclick="return confirm('id = {{ $user->id }} を外します。よろしいですか？')">Unfavorite</button>
+            <button type="submit" class="btn btn-warning btn-sm normal-case"
+                onclick="return confirm('id = {{ $micropost->id }} を外します。よろしいですか？')">Unfavorite</button>
         </form>
+    </div>
     @else
-        {{-- タンのフォーム --}}
-        <form method="POST" action="{{ route('user.favorite', $user->id) }}">
+    <div>
+        {{-- お気に入りボタンのフォーム --}}
+        <form method="POST" action="{{ route('favorites.favorite', $micropost->id) }}">
             @csrf
-            <button type="submit" class="btn btn-primary btn-block normal-case">Favorite</button>
+            <button type="submit" class="btn btn-success btn-sm normal-case">Favorite</button>
         </form>
-    @endif
+    </div>
 @endif

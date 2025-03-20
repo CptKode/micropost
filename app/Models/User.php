@@ -130,9 +130,8 @@ class User extends Authenticatable
     public function favorite(int $userId)
     {
         $exist = $this->favorite($userId);
-        $its_me = $this->id == $userId;
 
-        if ($exist || $its_me) {
+        if ($exist) {
             return false;
         } else {
             $this->favorites()->attach($userId);
@@ -147,9 +146,8 @@ class User extends Authenticatable
     public function unfavorite(int $userId)
     {
         $exist = $this->favorite($userId);
-        $its_me = $this->id == $userId;
 
-        if ($exist && !$its_me) {
+        if ($exist) {
             $this->favorites()->detach($userId);
             return true;
         } else {
